@@ -10,6 +10,7 @@ from edo_core_msgs.msg import JointControl
 from edo_core_msgs.msg import MovementCommand
 from edo_core_msgs.msg import JointCalibration
 from edo_core_msgs.msg import MovementFeedback
+from edo_core_msgs.msg import CollisionThreshold
 from edo_core_msgs.msg import JointStateArray
 from edo_core_msgs.srv import ControlSwitch, ControlSwitchRequest
 from edo.messages import errors
