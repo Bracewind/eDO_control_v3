@@ -1,6 +1,6 @@
 # eDO Control package
 
-This package is a clone of eDO_control packages written by @ymollard.
+This package is a clone of eDO_control packages written by @YMollard.
 
 # WARNING READ THIS
 It has been modified to be compatible with eDO v3.
