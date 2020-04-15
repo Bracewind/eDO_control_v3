@@ -94,6 +94,8 @@ class EdoStates(object):
         # TODO alternative solution possible ?
         self.disable_collision()
 
+        rospy.Subscriber('/enable_collision', Bool, self.collision_listener)
+
         self.switch_algo_service(enable_algorithm_node)      
 
     def disable_collision(self):
@@ -119,6 +121,36 @@ class EdoStates(object):
 
         self._algo_col_thr_pub = rospy.Publisher('/algo_coll_thr', CollisionThreshold, queue_size=1, latch=True)
         self._algo_col_thr_pub.publish(msg_dis_coll_algo)
+
+    def enable_collision(self):
+        # TODO test this function and change it if it does not work
+        msg_dis_coll_js = JointInit()
+        msg_dis_coll_js.mode = 3
+        msg_dis_coll_js.joints_mask = 63
+        msg_dis_coll_js.reduction_factor = 0.5
+
+        msg_dis_coll_js_m = JointInit()
+        msg_dis_coll_js_m.mode = 3
+        msg_dis_coll_js_m.joints_mask = 127
+        msg_dis_coll_js_m.reduction_factor = 0.5
+
+        msg_dis_coll_algo = CollisionThreshold()
+        msg_dis_coll_algo.joints_mask = 127
+        msg_dis_coll_algo.threshold = 0.5
+
+        self._joint_init_command_pub.publish(msg_dis_coll_js)
+
+        self._machine_init_pub = rospy.Publisher('/machine_init', JointInit, queue_size=1, latch=True)
+        self._machine_init_pub.publish(msg_dis_coll_js_m)
+
+        self._algo_col_thr_pub = rospy.Publisher('/algo_coll_thr', CollisionThreshold, queue_size=1, latch=True)
+        self._algo_col_thr_pub.publish(msg_dis_coll_algo)
+
+    def collision_listener(self, enable_collision):
+        if enable_collision:
+            self.enable_collision()
+        else:
+            self.disable_collision()
 
     def js_callback(self, msg):
         self.current_joint_states = msg
